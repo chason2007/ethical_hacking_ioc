@@ -127,7 +127,7 @@ export const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose, onSuc
                     Drag and drop your PCAP file here, or <span className="text-cyan-400">browse</span>
                   </div>
                   <div className="text-xs text-slate-500">
-                    Supports .pcap, .pcapng, and .cap (up to 50MB)
+                    Supports .pcap, .pcapng, and .cap (up to 500MB)
                   </div>
                 </div>
               )}

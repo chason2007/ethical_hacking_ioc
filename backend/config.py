@@ -18,7 +18,8 @@ class Settings(BaseModel):
     DATABASE_URL: str = os.getenv("DATABASE_URL", f"sqlite:///{BASE_DIR}/network_analysis.db")
     
     # PCAP constraints
-    MAX_UPLOAD_SIZE_MB: int = int(os.getenv("MAX_UPLOAD_SIZE_MB", "50"))
+    MAX_UPLOAD_SIZE_MB: int = int(os.getenv("MAX_UPLOAD_SIZE_MB", "500"))
+    MAX_PACKETS_TO_PARSE: int = int(os.getenv("MAX_PACKETS_TO_PARSE", "50000"))
     ALLOWED_EXTENSIONS: set = {".pcap", ".pcapng", ".cap"}
     
     # CORS

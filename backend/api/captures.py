@@ -22,7 +22,7 @@ router = APIRouter(prefix="/captures", tags=["Captures"])
 
 def process_and_save_capture(db: Session, filepath: Path, original_filename: str, is_demo: int = 0) -> Capture:
     # 1. Parse packets
-    parsed_packets, summary = parse_pcap_file(str(filepath))
+    parsed_packets, summary = parse_pcap_file(str(filepath), max_packets=settings.MAX_PACKETS_TO_PARSE)
     
     # 2. Run analysis engine
     analysis_res = AnalysisEngine.analyze_capture(

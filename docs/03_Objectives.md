@@ -1,7 +1,7 @@
 # Chapter 3: Objectives
 
 ## 3.1 Primary Objectives
-1. **Multi-Format Packet Ingestion:** Implement secure upload and asynchronous parsing for standard packet capture formats (`.pcap`, `.pcapng`, `.cap`) up to 50MB.
+1. **Multi-Format Packet Ingestion:** Implement secure upload and asynchronous parsing for standard packet capture formats (`.pcap`, `.pcapng`, `.cap`) up to 500MB (configurable).
 2. **Comprehensive Protocol Dissection:** Develop dissection modules covering Link (Ethernet, ARP), Network (IPv4, IPv6, ICMP), Transport (TCP, UDP), and Application (DNS, HTTP, TLS) layers.
 3. **Structured Flow & Node Aggregation:** Automatically compute bidirectional conversation pairs and endpoint traffic volume metrics with private/public IP classification.
 4. **Defensive Anomaly Engine:** Implement rule-based heuristic anomaly detection covering:

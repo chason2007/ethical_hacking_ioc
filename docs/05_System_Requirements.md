@@ -2,7 +2,7 @@
 
 ## 5.1 Hardware Requirements
 - **Processor:** Intel Core i3 / AMD Ryzen 3 or higher (dual-core 2.0 GHz minimum; quad-core recommended for large PCAP analysis).
-- **RAM:** Minimum 4 GB (8 GB recommended for 50MB+ captures).
+- **RAM:** Minimum 4 GB (8 GB recommended for 500MB+ captures).
 - **Disk Space:** 500 MB free space for code, dependencies, and SQLite database storage.
 - **Display Resolution:** 1280 x 720 minimum (1920 x 1080 optimal for packet inspection grids).
 

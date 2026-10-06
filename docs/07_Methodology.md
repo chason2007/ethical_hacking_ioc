@@ -9,7 +9,7 @@ Packet capture traces are uploaded via the web interface or synthesized dynamica
 ### Step 2: File Validation
 Uploaded binaries undergo verification:
 - Extension matching against `.pcap`, `.pcapng`, and `.cap`.
-- Zero-byte file checks and maximum file size enforcement (50MB threshold).
+- Zero-byte file checks and maximum file size enforcement (500MB configurable threshold).
 - Magic byte validation to ensure legitimate libpcap / pcapng structure.
 
 ### Step 3: Layer Parsing
