@@ -191,19 +191,7 @@ Open your browser at: `http://localhost:5173`
 
 ---
 
-## 9. Running with Docker Compose
-
-To deploy both frontend and backend using Docker:
-
-```bash
-docker-compose up --build
-```
-- Frontend: `http://localhost`
-- Backend API: `http://localhost:8000/docs`
-
----
-
-## 10. Automated Testing
+## 9. Automated Testing
 
 Run the automated backend test suite:
 ```bash
@@ -219,7 +207,7 @@ npm run build
 
 ---
 
-## 11. Project Directory Structure
+## 10. Project Directory Structure
 
 ```
 ethical-hacking-ioc/
@@ -239,19 +227,17 @@ ethical-hacking-ioc/
 │   │   └── types/            # TypeScript Interfaces
 ├── docs/                     # Academic Submission Chapters (01 to 16)
 │   ├── 01_Introduction.md ... 16_References.md
-├── docker/                   # Dockerfiles & Nginx Config
 ├── sample-data/              # Synthetic Educational PCAPs
 ├── reports/                  # Generated PDF Audit Reports
 ├── scripts/                  # Init, PCAP Generator, and Starter Scripts
 ├── tests/                    # Pytest Test Suites
-├── docker-compose.yml        # Multi-Container Config
 ├── requirements.txt          # Python Dependencies
 └── README.md                 # Project Documentation
 ```
 
 ---
 
-## 12. Academic Evaluation & Viva Companion
+## 11. Academic Evaluation & Viva Companion
 
 A dedicated `/docs` directory is included containing all 16 academic project chapters formatted for thesis and project report inclusion:
 - `01_Introduction.md`
