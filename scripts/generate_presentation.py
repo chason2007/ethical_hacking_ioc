@@ -1,4 +1,3 @@
-import sys
 from pathlib import Path
 from pptx import Presentation
 from pptx.util import Inches, Pt
@@ -8,389 +7,387 @@ from pptx.enum.shapes import MSO_SHAPE
 
 def create_deck():
     prs = Presentation()
-    # 16:9 widescreen
     prs.slide_width = Inches(13.333)
     prs.slide_height = Inches(7.5)
     
-    # Palette
-    BG_DARK = RGBColor(15, 23, 42)        # Slate 900
-    CARD_BG = RGBColor(30, 41, 59)        # Slate 800
-    TEXT_MAIN = RGBColor(248, 250, 252)   # Slate 50
-    TEXT_MUTED = RGBColor(148, 163, 184)  # Slate 400
-    CYAN = RGBColor(34, 211, 238)         # Cyan 400
-    EMERALD = RGBColor(52, 211, 153)      # Emerald 400
-    AMBER = RGBColor(251, 191, 36)        # Amber 400
-    BORDER_COLOR = RGBColor(51, 65, 85)   # Slate 700
+    # Modern High-End Palette
+    BG_DARK = RGBColor(10, 15, 29)         # Deep Navy (#0A0F1D)
+    CARD_BG = RGBColor(21, 30, 50)         # Soft Slate Navy (#151E32)
+    CARD_BORDER = RGBColor(38, 52, 78)     # Muted Outline (#26344E)
+    TEXT_MAIN = RGBColor(248, 250, 252)    # Pure Crisp White (#F8FAFC)
+    TEXT_MUTED = RGBColor(148, 163, 184)   # Slate 400 (#94A3B8)
+    CYAN = RGBColor(6, 182, 212)           # Electric Cyan (#06B6D4)
+    EMERALD = RGBColor(16, 185, 129)       # Neon Mint (#10B981)
+    AMBER = RGBColor(245, 158, 11)         # Soft Amber (#F59E0B)
+    PURPLE = RGBColor(168, 85, 247)        # Accent Purple (#A855F7)
 
-    def apply_dark_bg(slide):
+    def apply_bg(slide):
         bg = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, prs.slide_width, prs.slide_height)
         bg.fill.solid()
         bg.fill.fore_color.rgb = BG_DARK
         bg.line.fill.background()
         return bg
 
-    def add_header(slide, title_text, category_text="PACKET ANALYSIS OF COMMON NETWORK PROTOCOLS"):
-        cat_box = slide.shapes.add_textbox(Inches(0.8), Inches(0.5), Inches(11.7), Inches(0.4))
+    def add_clean_header(slide, title, category="NETWORK PROTOCOL INSPECTOR"):
+        # Category Pill
+        cat_box = slide.shapes.add_textbox(Inches(0.9), Inches(0.55), Inches(11.5), Inches(0.35))
         tf_cat = cat_box.text_frame
         tf_cat.word_wrap = True
-        p_cat = tf_cat.paragraphs[0]
-        p_cat.text = category_text.upper()
-        p_cat.font.size = Pt(11)
-        p_cat.font.bold = True
-        p_cat.font.color.rgb = CYAN
+        p_c = tf_cat.paragraphs[0]
+        p_c.text = category.upper()
+        p_c.font.size = Pt(10)
+        p_c.font.bold = True
+        p_c.font.color.rgb = CYAN
 
-        title_box = slide.shapes.add_textbox(Inches(0.8), Inches(0.85), Inches(11.7), Inches(0.8))
+        # Main Title
+        title_box = slide.shapes.add_textbox(Inches(0.9), Inches(0.85), Inches(11.5), Inches(0.75))
         tf_title = title_box.text_frame
         tf_title.word_wrap = True
-        p_title = tf_title.paragraphs[0]
-        p_title.text = title_text
-        p_title.font.size = Pt(26)
-        p_title.font.bold = True
-        p_title.font.color.rgb = TEXT_MAIN
+        p_t = tf_title.paragraphs[0]
+        p_t.text = title
+        p_t.font.size = Pt(24)
+        p_t.font.bold = True
+        p_t.font.color.rgb = TEXT_MAIN
 
     # ==========================================
-    # SLIDE 1: Title Slide
+    # SLIDE 1: Title Slide (Minimalist & Punchy)
     # ==========================================
-    slide_layout = prs.slide_layouts[6]
-    s1 = prs.slides.add_slide(slide_layout)
-    apply_dark_bg(s1)
+    s1 = prs.slides.add_slide(prs.slide_layouts[6])
+    apply_bg(s1)
 
-    tbox = s1.shapes.add_textbox(Inches(1.0), Inches(1.8), Inches(11.3), Inches(3.5))
+    # Accent decorative top bar
+    bar = s1.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), Inches(1.2), Inches(1.2), Inches(0.08))
+    bar.fill.solid()
+    bar.fill.fore_color.rgb = CYAN
+    bar.line.fill.background()
+
+    # Title box
+    tbox = s1.shapes.add_textbox(Inches(0.9), Inches(1.5), Inches(11.5), Inches(3.2))
     tf1 = tbox.text_frame
     tf1.word_wrap = True
     
-    p_tag = tf1.paragraphs[0]
-    p_tag.text = "ACADEMIC NETWORK SECURITY PROJECT"
-    p_tag.font.size = Pt(14)
-    p_tag.font.bold = True
-    p_tag.font.color.rgb = CYAN
+    p_badge = tf1.paragraphs[0]
+    p_badge.text = "DEFENSIVE CYBERSECURITY & TRAFFIC ANALYSIS"
+    p_badge.font.size = Pt(12)
+    p_badge.font.bold = True
+    p_badge.font.color.rgb = CYAN
 
     p_main = tf1.add_paragraph()
-    p_main.text = "Packet Analysis of Common Network Protocols"
-    p_main.font.size = Pt(36)
+    p_main.text = "Packet Analysis of\nCommon Network Protocols"
+    p_main.font.size = Pt(38)
     p_main.font.bold = True
     p_main.font.color.rgb = TEXT_MAIN
 
     p_sub = tf1.add_paragraph()
-    p_sub.text = "A Modern Defensive Forensics & Educational Network Traffic Analysis Platform"
-    p_sub.font.size = Pt(18)
+    p_sub.text = "A simple, web-based platform to dissect packets, visualize traffic, and spot anomalies."
+    p_sub.font.size = Pt(16)
     p_sub.font.color.rgb = TEXT_MUTED
 
-    # Meta card
-    card = s1.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(1.0), Inches(5.2), Inches(11.3), Inches(1.4))
-    card.fill.solid()
-    card.fill.fore_color.rgb = CARD_BG
-    card.line.color.rgb = BORDER_COLOR
-    tf_meta = card.text_frame
-    p_m1 = tf_meta.paragraphs[0]
-    p_m1.text = "Course: Ethical Hacking / Network Security Elective (B.E. / B.Tech CS)"
-    p_m1.font.size = Pt(13)
-    p_m1.font.bold = True
-    p_m1.font.color.rgb = EMERALD
-    p_m2 = tf_meta.add_paragraph()
-    p_m2.text = "Architecture: React 19 Frontend  •  Python FastAPI Backend  •  Local SQLite Database"
-    p_m2.font.size = Pt(12)
-    p_m2.font.color.rgb = TEXT_MUTED
-
-    # ==========================================
-    # SLIDE 2: Project Motivation & Goal
-    # ==========================================
-    s2 = prs.slides.add_slide(slide_layout)
-    apply_dark_bg(s2)
-    add_header(s2, "Why Build This? The Problem & Our Goal")
-
-    cols = [
-        ("The Challenge", [
-            "Network security concepts are often taught purely through theory.",
-            "Traditional tools like Wireshark are powerful but have a steep learning curve.",
-            "Students struggle to connect raw packet hex bytes to real network behavior.",
-            "Hard to correlate multi-step port scans and cleartext credential risks manually."
-        ], AMBER),
-        ("Our Defensive Solution", [
-            "A clean, web-based dashboard that requires zero complex setup.",
-            "Upload any .pcap or .pcapng file (up to 500MB) or load the 1-click demo.",
-            "Visual breakdown of protocols from Layer 2 up to Layer 7.",
-            "Defensive-only: Explains what is happening without offensive attacks."
-        ], CYAN),
-        ("Educational Impact", [
-            "Helps students prepare for lab exams and project viva presentations.",
-            "Provides contextual 'Why It Matters' explanations for every finding.",
-            "Generates downloadable PDF audit reports for submission.",
-            "Includes interactive TCP handshakes and viva Q&A cheat sheets."
-        ], EMERALD)
+    # Bottom Pill Cards
+    pills = [
+        ("Course", "Ethical Hacking / Network Security", EMERALD),
+        ("Mode", "Strictly Defensive & Passive", CYAN),
+        ("Setup", "100% Local (Zero Docker)", AMBER),
     ]
-
-    for i, (col_title, items, accent) in enumerate(cols):
-        left = Inches(0.8 + i * 4.0)
-        box = s2.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left, Inches(2.0), Inches(3.7), Inches(4.7))
+    for i, (tag, val, clr) in enumerate(pills):
+        box = s1.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9 + i * 3.8), Inches(5.4), Inches(3.5), Inches(1.2))
         box.fill.solid()
         box.fill.fore_color.rgb = CARD_BG
-        box.line.color.rgb = BORDER_COLOR
+        box.line.color.rgb = CARD_BORDER
         tf = box.text_frame
         tf.word_wrap = True
         
+        p1 = tf.paragraphs[0]
+        p1.text = tag.upper()
+        p1.font.size = Pt(10)
+        p1.font.bold = True
+        p1.font.color.rgb = clr
+
+        p2 = tf.add_paragraph()
+        p2.text = val
+        p2.font.size = Pt(13)
+        p2.font.bold = True
+        p2.font.color.rgb = TEXT_MAIN
+
+    # ==========================================
+    # SLIDE 2: The Core Idea (3 Words: Ingest, Decode, Defend)
+    # ==========================================
+    s2 = prs.slides.add_slide(prs.slide_layouts[6])
+    apply_bg(s2)
+    add_clean_header(s2, "The Core Mission: Ingest. Decode. Defend.")
+
+    cards_s2 = [
+        ("01", "INGEST", "Drop any .pcap or .pcapng file up to 500MB, or load the instant 1-click demo.", CYAN),
+        ("02", "DECODE", "Automatically unpack every layer from Ethernet to IP, TCP, DNS, and TLS.", EMERALD),
+        ("03", "DEFEND", "Spot port scans, SYN floods, cleartext passwords, and DNS anomalies in seconds.", AMBER),
+    ]
+
+    for i, (num, heading, blurb, accent) in enumerate(cards_s2):
+        left = Inches(0.9 + i * 3.9)
+        box = s2.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left, Inches(2.0), Inches(3.6), Inches(4.5))
+        box.fill.solid()
+        box.fill.fore_color.rgb = CARD_BG
+        box.line.color.rgb = CARD_BORDER
+        tf = box.text_frame
+        tf.word_wrap = True
+
+        p_num = tf.paragraphs[0]
+        p_num.text = num
+        p_num.font.size = Pt(28)
+        p_num.font.bold = True
+        p_num.font.color.rgb = accent
+
+        p_h = tf.add_paragraph()
+        p_h.text = heading
+        p_h.font.size = Pt(18)
+        p_h.font.bold = True
+        p_h.font.color.rgb = TEXT_MAIN
+
+        p_b = tf.add_paragraph()
+        p_b.text = f"\n{blurb}"
+        p_b.font.size = Pt(13)
+        p_b.font.color.rgb = TEXT_MUTED
+
+    # ==========================================
+    # SLIDE 3: System Flow (Clean 4-Step Pipeline)
+    # ==========================================
+    s3 = prs.slides.add_slide(prs.slide_layouts[6])
+    apply_bg(s3)
+    add_clean_header(s3, "How It Works: Clean 4-Stage Pipeline")
+
+    pipeline = [
+        ("STEP 1", "Upload Capture", "Accepts standard .pcap / .pcapng files up to 500MB.", CYAN),
+        ("STEP 2", "Multi-Layer Parser", "Dissects Ethernet, IP, TCP, UDP, ICMP, DNS & TLS.", EMERALD),
+        ("STEP 3", "Rule-Based Defense", "Evaluates 8 heuristic checks for scans and leaks.", AMBER),
+        ("STEP 4", "Interactive UI", "Live charts, Wireshark grid, and 1-click PDF reports.", CYAN),
+    ]
+
+    for i, (step, name, desc, clr) in enumerate(pipeline):
+        left = Inches(0.9 + i * 2.9)
+        box = s3.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left, Inches(2.2), Inches(2.7), Inches(3.8))
+        box.fill.solid()
+        box.fill.fore_color.rgb = CARD_BG
+        box.line.color.rgb = CARD_BORDER
+        tf = box.text_frame
+        tf.word_wrap = True
+
+        p_s = tf.paragraphs[0]
+        p_s.text = step
+        p_s.font.size = Pt(11)
+        p_s.font.bold = True
+        p_s.font.color.rgb = clr
+
+        p_n = tf.add_paragraph()
+        p_n.text = name
+        p_n.font.size = Pt(16)
+        p_n.font.bold = True
+        p_n.font.color.rgb = TEXT_MAIN
+
+        p_d = tf.add_paragraph()
+        p_d.text = f"\n{desc}"
+        p_d.font.size = Pt(12)
+        p_d.font.color.rgb = TEXT_MUTED
+
+    # ==========================================
+    # SLIDE 4: Protocols Analyzed (L2 - L7 Stack)
+    # ==========================================
+    s4 = prs.slides.add_slide(prs.slide_layouts[6])
+    apply_bg(s4)
+    add_clean_header(s4, "Full-Stack Protocol Coverage (L2 to L7)")
+
+    layers = [
+        ("L7 Application", "DNS, HTTP, TLS", "Domain queries, cleartext URLs/methods, and TLS SNI domain handshakes.", CYAN),
+        ("L4 Transport", "TCP, UDP, ICMP", "3-way handshakes, all 6 TCP flags (SYN, ACK, RST), and ICMP ping echoes.", EMERALD),
+        ("L3 Network", "IPv4, IPv6", "Source/Destination addresses, TTL hop limits, and Private vs Public IP tags.", AMBER),
+        ("L2 Data Link", "Ethernet II, ARP", "Physical MAC addresses, EtherType frame IDs, and ARP address resolution.", PURPLE),
+    ]
+
+    for i, (layer_name, protos, detail, clr) in enumerate(layers):
+        top = Inches(1.9 + i * 1.25)
+        box = s4.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), top, Inches(11.5), Inches(1.05))
+        box.fill.solid()
+        box.fill.fore_color.rgb = CARD_BG
+        box.line.color.rgb = CARD_BORDER
+        tf = box.text_frame
+        tf.word_wrap = True
+
         p = tf.paragraphs[0]
-        p.text = col_title
-        p.font.size = Pt(16)
+        p.text = f"{layer_name}   •   {protos}"
+        p.font.size = Pt(14)
         p.font.bold = True
-        p.font.color.rgb = accent
-        
-        for item in items:
-            p_item = tf.add_paragraph()
-            p_item.text = f"•  {item}"
-            p_item.font.size = Pt(12)
-            p_item.font.color.rgb = TEXT_MAIN
+        p.font.color.rgb = clr
+
+        p_sub = tf.add_paragraph()
+        p_sub.text = detail
+        p_sub.font.size = Pt(11)
+        p_sub.font.color.rgb = TEXT_MUTED
 
     # ==========================================
-    # SLIDE 3: End-to-End Application Flow
+    # SLIDE 5: Key Features (The Experience)
     # ==========================================
-    s3 = prs.slides.add_slide(slide_layout)
-    apply_dark_bg(s3)
-    add_header(s3, "How It Works: End-to-End System Flow")
+    s5 = prs.slides.add_slide(prs.slide_layouts[6])
+    apply_bg(s5)
+    add_clean_header(s5, "What You See & Do in the Application")
 
-    steps = [
-        ("1. Ingestion", "Upload .pcap / .pcapng\n(up to 500MB) or 1-click\nsynthetic demo sample", CYAN),
-        ("2. Dissection", "Scapy packet engine\nparses Ethernet, IP,\nTCP, UDP, DNS, TLS", EMERALD),
-        ("3. Analytics", "Computes 5-tuple flows,\nendpoints, port mapping\n& size histograms", CYAN),
-        ("4. Security", "8 heuristic rules flag\nscans, floods, cleartext\n& DNS exfiltration", AMBER),
-        ("5. Local Storage", "Zero Docker needed!\nSaves all results into\nlocal SQLite database", EMERALD),
-        ("6. Web Dashboard", "Interactive charts,\nWireshark-style table,\nand 1-click PDF reports", CYAN),
+    feats = [
+        ("📊 Operations Dashboard", "High-level overview: total packets, bytes, unique IPs, protocol doughnut chart, and MTU packet size histogram.", CYAN),
+        ("🔍 Packet Explorer & Inspector", "Wireshark-style sortable table with instant search, protocol filters, collapsible layer tree, and hex dump.", EMERALD),
+        ("💬 5-Tuple Conversations", "Tracks bidirectional communication pairs (Host A <-> Host B), bytes transferred, and session durations.", AMBER),
+        ("🌐 Endpoints & Port Mapping", "Host directory showing top talkers, plus destination ports mapped to recognized services (443->HTTPS, 53->DNS).", PURPLE),
     ]
 
-    for i, (stitle, sdesc, scolor) in enumerate(steps):
-        col = i % 3
-        row = i // 3
-        left = Inches(0.8 + col * 4.0)
-        top = Inches(2.0 + row * 2.5)
-        
-        box = s3.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left, top, Inches(3.7), Inches(2.2))
+    for i, (ftitle, fdesc, clr) in enumerate(feats):
+        col = i % 2
+        row = i // 2
+        left = Inches(0.9 + col * 5.9)
+        top = Inches(2.0 + row * 2.4)
+
+        box = s5.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left, top, Inches(5.6), Inches(2.1))
         box.fill.solid()
         box.fill.fore_color.rgb = CARD_BG
-        box.line.color.rgb = BORDER_COLOR
+        box.line.color.rgb = CARD_BORDER
         tf = box.text_frame
         tf.word_wrap = True
-        
-        p = tf.paragraphs[0]
-        p.text = stitle
-        p.font.size = Pt(15)
-        p.font.bold = True
-        p.font.color.rgb = scolor
-        
-        p_desc = tf.add_paragraph()
-        p_desc.text = sdesc
-        p_desc.font.size = Pt(12)
-        p_desc.font.color.rgb = TEXT_MAIN
 
-    # ==========================================
-    # SLIDE 4: Protocols Analyzed (L2 - L7)
-    # ==========================================
-    s4 = prs.slides.add_slide(slide_layout)
-    apply_dark_bg(s4)
-    add_header(s4, "Multi-Layer Protocol Support (L2 to L7)")
-
-    proto_cards = [
-        ("Layer 2: Data Link", "Ethernet II & ARP", "Extracts Source & Destination MAC addresses, EtherType frame IDs, and ARP broadcast resolution.", CYAN),
-        ("Layer 3: Network", "IPv4 & IPv6", "Analyzes Source/Destination IPs, TTL hop decay, header lengths, and RFC 1918 Private vs Public IPs.", EMERALD),
-        ("Layer 4: Transport", "TCP, UDP, ICMP", "Tracks TCP 3-way handshakes, sequence numbers, flag combinations (SYN, ACK, RST, FIN), and ICMP ping types.", CYAN),
-        ("Layer 7: Application", "DNS, HTTP, TLS/HTTPS", "Inspects DNS queries & response codes, detects cleartext HTTP methods & URIs, and parses TLS SNI domain names.", AMBER),
-    ]
-
-    for i, (layer_title, proto_names, desc, color) in enumerate(proto_cards):
-        left = Inches(0.8 + (i % 2) * 6.0)
-        top = Inches(2.0 + (i // 2) * 2.5)
-        
-        box = s4.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left, top, Inches(5.7), Inches(2.2))
-        box.fill.solid()
-        box.fill.fore_color.rgb = CARD_BG
-        box.line.color.rgb = BORDER_COLOR
-        tf = box.text_frame
-        tf.word_wrap = True
-        
-        p = tf.paragraphs[0]
-        p.text = f"{layer_title}  •  {proto_names}"
-        p.font.size = Pt(15)
-        p.font.bold = True
-        p.font.color.rgb = color
-        
-        p_desc = tf.add_paragraph()
-        p_desc.text = desc
-        p_desc.font.size = Pt(12)
-        p_desc.font.color.rgb = TEXT_MAIN
-
-    # ==========================================
-    # SLIDE 5: Core Features Overview
-    # ==========================================
-    s5 = prs.slides.add_slide(slide_layout)
-    apply_dark_bg(s5)
-    add_header(s5, "Key Features: What You Can Do in the UI")
-
-    features = [
-        ("📊 Operations Dashboard", "High-level overview with total packets, bytes, unique IPs, protocol doughnut chart, and MTU packet size histogram."),
-        ("🔍 Packet Explorer & Inspector", "Wireshark-style sortable table with instant search, protocol filters, collapsible layer tree, and hex preview."),
-        ("💬 5-Tuple Conversations", "Tracks bidirectional communication pairs (IP1 + Port1 <-> IP2 + Port2), bytes transferred, and session durations."),
-        ("🌐 Endpoints & Ports", "Host directory showing who sent/received the most data, plus destination ports mapped to IANA services (DNS, HTTP, SSH)."),
-        ("🛡️ Defensive Security Insights", "Automated anomaly detection: flags port scans, SYN floods, RST bursts, DNS tunneling, and cleartext credentials."),
-        ("📄 Reports & Viva Prep", "1-click professional PDF audit report download, CSV/JSON data exports, and interactive viva Q&A cheat sheets.")
-    ]
-
-    for i, (ftitle, fdesc) in enumerate(features):
-        left = Inches(0.8 + (i % 2) * 6.0)
-        top = Inches(1.8 + (i // 2) * 1.7)
-        
-        box = s5.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left, top, Inches(5.7), Inches(1.5))
-        box.fill.solid()
-        box.fill.fore_color.rgb = CARD_BG
-        box.line.color.rgb = BORDER_COLOR
-        tf = box.text_frame
-        tf.word_wrap = True
-        
         p = tf.paragraphs[0]
         p.text = ftitle
-        p.font.size = Pt(14)
+        p.font.size = Pt(15)
         p.font.bold = True
-        p.font.color.rgb = CYAN
-        
-        p_desc = tf.add_paragraph()
-        p_desc.text = fdesc
-        p_desc.font.size = Pt(11)
-        p_desc.font.color.rgb = TEXT_MAIN
+        p.font.color.rgb = clr
+
+        p_d = tf.add_paragraph()
+        p_d.text = f"\n{fdesc}"
+        p_d.font.size = Pt(12)
+        p_d.font.color.rgb = TEXT_MAIN
 
     # ==========================================
-    # SLIDE 6: Defensive Security Detection Rules
+    # SLIDE 6: Defensive Security Engine
     # ==========================================
-    s6 = prs.slides.add_slide(slide_layout)
-    apply_dark_bg(s6)
-    add_header(s6, "Defensive Security Engine: Built-In Detection Rules")
+    s6 = prs.slides.add_slide(prs.slide_layouts[6])
+    apply_bg(s6)
+    add_clean_header(s6, "Defensive Security Engine: What We Detect")
 
-    rules = [
-        ("SYN Port Scanning", "Detects single host probing multiple distinct ports in short order.", "HIGH", AMBER),
-        ("SYN Flood / Half-Open", "Detects elevated ratio of SYN requests without completing the 3-way handshake.", "HIGH", AMBER),
-        ("Elevated TCP Reset (RST)", "Flags abnormal burst of RST packets indicating closed ports or firewall drops.", "MEDIUM", CYAN),
-        ("DNS Tunneling Heuristics", "Identifies unusually long domain queries (>45 chars) or high entropy subdomains.", "MEDIUM", CYAN),
-        ("Cleartext Credentials", "Flags unencrypted HTTP forms sending passwords or sensitive auth headers.", "HIGH", AMBER),
-        ("Uncommon Port Activity", "Warns about traffic over high-risk or unusual administrative ports.", "LOW", EMERALD)
+    threats = [
+        ("🔍 Port Scans", "Flags single hosts probing multiple ports within short time windows.", "HIGH SEVERITY", AMBER),
+        ("⚠️ SYN Half-Open Floods", "Identifies abnormal bursts of SYN packets with no completed handshakes.", "HIGH SEVERITY", AMBER),
+        ("🕵️ DNS Tunneling Indicators", "Catches unusually long domain queries (>45 chars) or high entropy names.", "MEDIUM SEVERITY", CYAN),
+        ("🔓 Cleartext Password Leaks", "Flags unencrypted HTTP forms sending authentication credentials in the clear.", "HIGH SEVERITY", AMBER),
     ]
 
-    for i, (rtitle, rdesc, rsev, rcolor) in enumerate(rules):
-        col = i % 3
-        row = i // 3
-        left = Inches(0.8 + col * 4.0)
-        top = Inches(2.0 + row * 2.5)
-        
-        box = s6.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left, top, Inches(3.7), Inches(2.2))
+    for i, (ttitle, tdesc, tsev, tclr) in enumerate(threats):
+        col = i % 2
+        row = i // 2
+        left = Inches(0.9 + col * 5.9)
+        top = Inches(2.0 + row * 2.4)
+
+        box = s6.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left, top, Inches(5.6), Inches(2.1))
         box.fill.solid()
         box.fill.fore_color.rgb = CARD_BG
-        box.line.color.rgb = BORDER_COLOR
+        box.line.color.rgb = CARD_BORDER
         tf = box.text_frame
         tf.word_wrap = True
-        
-        p = tf.paragraphs[0]
-        p.text = f"[{rsev}] {rtitle}"
-        p.font.size = Pt(14)
-        p.font.bold = True
-        p.font.color.rgb = rcolor
-        
-        p_desc = tf.add_paragraph()
-        p_desc.text = rdesc
-        p_desc.font.size = Pt(11)
-        p_desc.font.color.rgb = TEXT_MAIN
 
-        p_note = tf.add_paragraph()
-        p_note.text = "\nIncludes 'Why It Matters' & remediation guidance for every alert."
-        p_note.font.size = Pt(10)
-        p_note.font.color.rgb = TEXT_MUTED
+        p_s = tf.paragraphs[0]
+        p_s.text = tsev
+        p_s.font.size = Pt(10)
+        p_s.font.bold = True
+        p_s.font.color.rgb = tclr
+
+        p_t = tf.add_paragraph()
+        p_t.text = ttitle
+        p_t.font.size = Pt(15)
+        p_t.font.bold = True
+        p_t.font.color.rgb = TEXT_MAIN
+
+        p_d = tf.add_paragraph()
+        p_d.text = f"\n{tdesc}"
+        p_d.font.size = Pt(12)
+        p_d.font.color.rgb = TEXT_MUTED
 
     # ==========================================
-    # SLIDE 7: Technology Stack
+    # SLIDE 7: Architecture (100% Local & Clean)
     # ==========================================
-    s7 = prs.slides.add_slide(slide_layout)
-    apply_dark_bg(s7)
-    add_header(s7, "Technology Stack & Architecture")
+    s7 = prs.slides.add_slide(prs.slide_layouts[6])
+    apply_bg(s7)
+    add_clean_header(s7, "System Architecture: Fast, Simple & 100% Local")
 
-    tech_cards = [
-        ("Frontend (User Interface)", [
-            "React 19 & TypeScript",
-            "Vite 8 build system",
-            "Tailwind CSS (dark cybersecurity theme)",
-            "Lucide React vector icons",
-            "Zero heavy third-party UI templates"
-        ], CYAN),
-        ("Backend (Analysis Engine)", [
-            "Python 3.10 - 3.14 + FastAPI",
-            "Scapy for streaming PCAP dissection",
-            "Pydantic data validation schemas",
-            "ReportLab for PDF report compilation",
-            "Uvicorn asynchronous ASGI server"
-        ], EMERALD),
-        ("Storage & Deployment", [
-            "Local SQLite database (network_analysis.db)",
-            "Zero Docker or external DB services needed",
-            "Sub-millisecond query responses & pagination",
-            "Runs natively on Windows, Linux, and macOS",
-            "Automated one-click start script provided"
-        ], AMBER),
+    arch_cards = [
+        ("Frontend", "React 19 + Vite", "Modern cybersecurity dark theme using Tailwind CSS and Lucide icons.", CYAN),
+        ("Backend", "Python FastAPI", "Streaming packet parser using Scapy with asynchronous REST APIs.", EMERALD),
+        ("Database", "Local SQLite", "Zero Docker needed. All capture data stored locally in network_analysis.db.", AMBER),
     ]
 
-    for i, (ttitle, titems, tcolor) in enumerate(tech_cards):
-        left = Inches(0.8 + i * 4.0)
-        box = s7.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left, Inches(2.0), Inches(3.7), Inches(4.7))
+    for i, (comp, tech, detail, clr) in enumerate(arch_cards):
+        left = Inches(0.9 + i * 3.9)
+        box = s7.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left, Inches(2.0), Inches(3.6), Inches(4.5))
         box.fill.solid()
         box.fill.fore_color.rgb = CARD_BG
-        box.line.color.rgb = BORDER_COLOR
+        box.line.color.rgb = CARD_BORDER
         tf = box.text_frame
         tf.word_wrap = True
-        
-        p = tf.paragraphs[0]
-        p.text = ttitle
-        p.font.size = Pt(16)
-        p.font.bold = True
-        p.font.color.rgb = tcolor
-        
-        for item in titems:
-            p_item = tf.add_paragraph()
-            p_item.text = f"•  {item}"
-            p_item.font.size = Pt(12)
-            p_item.font.color.rgb = TEXT_MAIN
+
+        p_c = tf.paragraphs[0]
+        p_c.text = comp.upper()
+        p_c.font.size = Pt(12)
+        p_c.font.bold = True
+        p_c.font.color.rgb = clr
+
+        p_t = tf.add_paragraph()
+        p_t.text = tech
+        p_t.font.size = Pt(18)
+        p_t.font.bold = True
+        p_t.font.color.rgb = TEXT_MAIN
+
+        p_d = tf.add_paragraph()
+        p_d.text = f"\n{detail}\n\n• Sub-millisecond queries\n• 500MB upload support\n• Zero complex dependencies"
+        p_d.font.size = Pt(12)
+        p_d.font.color.rgb = TEXT_MUTED
 
     # ==========================================
-    # SLIDE 8: Summary & Viva Takeaways
+    # SLIDE 8: Review & Viva Ready
     # ==========================================
-    s8 = prs.slides.add_slide(slide_layout)
-    apply_dark_bg(s8)
-    add_header(s8, "Summary & Key Project Takeaways")
+    s8 = prs.slides.add_slide(prs.slide_layouts[6])
+    apply_bg(s8)
+    add_clean_header(s8, "Ready for Review: All Deliverables Included")
 
-    takeaways = [
-        ("Real-World Relevance", "Bridges academic networking theory (OSI model, handshakes) with real-world defensive Security Operations Center (SOC) workflows.", CYAN),
-        ("Production Quality", "Supports up to 500MB PCAP files with fast asynchronous parsing, responsive search, and clean error handling.", EMERALD),
-        ("Defensive & Ethical", "Strictly passive analysis: inspects captured packets without launching attacks or modifying network configurations.", CYAN),
-        ("Ready for Review", "Complete documentation, passing unit tests, viva Q&A study guide, and professional PDF deliverable exports included.", AMBER),
+    deliverables = [
+        ("📄 1-Click PDF Report", "Exports an executive audit report with capture stats and security findings ready for submission.", CYAN),
+        ("🎓 Viva Cheat Sheet", "Interactive TCP 3-way handshake diagram and 15+ curated viva exam questions with answers.", EMERALD),
+        ("🧪 8/8 Automated Tests", "Comprehensive test suite covering endpoints, Scapy parsing, and security rules.", AMBER),
+        ("⚡ 1-Click Demo", "Pre-packaged multi-protocol capture with realistic scan patterns to test instantly.", PURPLE),
     ]
 
-    for i, (title, desc, color) in enumerate(takeaways):
-        left = Inches(0.8 + (i % 2) * 6.0)
-        top = Inches(2.0 + (i // 2) * 2.5)
-        
-        box = s8.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left, top, Inches(5.7), Inches(2.2))
+    for i, (title, desc, clr) in enumerate(deliverables):
+        col = i % 2
+        row = i // 2
+        left = Inches(0.9 + col * 5.9)
+        top = Inches(2.0 + row * 2.4)
+
+        box = s8.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left, top, Inches(5.6), Inches(2.1))
         box.fill.solid()
         box.fill.fore_color.rgb = CARD_BG
-        box.line.color.rgb = BORDER_COLOR
+        box.line.color.rgb = CARD_BORDER
         tf = box.text_frame
         tf.word_wrap = True
-        
+
         p = tf.paragraphs[0]
-        p.text = f"✔  {title}"
-        p.font.size = Pt(16)
+        p.text = title
+        p.font.size = Pt(15)
         p.font.bold = True
-        p.font.color.rgb = color
-        
-        p_desc = tf.add_paragraph()
-        p_desc.text = desc
-        p_desc.font.size = Pt(13)
-        p_desc.font.color.rgb = TEXT_MAIN
+        p.font.color.rgb = clr
+
+        p_d = tf.add_paragraph()
+        p_d.text = f"\n{desc}"
+        p_d.font.size = Pt(12)
+        p_d.font.color.rgb = TEXT_MAIN
 
     output_path = Path("Packet_Analysis_Project_Presentation.pptx")
-    prs.save(str(output_path))
-    print(f"[SUCCESS] Presentation generated: {output_path.resolve()}")
+    try:
+        prs.save(str(output_path))
+    except PermissionError:
+        output_path = Path("Packet_Analysis_Presentation_Clean.pptx")
+        prs.save(str(output_path))
+    print(f"[SUCCESS] Minimalist presentation generated: {output_path.resolve()}")
 
 if __name__ == "__main__":
     create_deck()
