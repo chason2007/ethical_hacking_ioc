@@ -370,7 +370,7 @@ def create_deck():
         left = Inches(0.8 + (i % 2) * 6.0)
         top = Inches(2.0 + (i // 2) * 2.5)
         
-        box = s8.slides.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left, top, Inches(5.7), Inches(2.2))
+        box = s8.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left, top, Inches(5.7), Inches(2.2))
         box.fill.solid()
         box.fill.fore_color.rgb = CARD_BG
         box.line.color.rgb = BORDER_COLOR
