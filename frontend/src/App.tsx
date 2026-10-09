@@ -7,15 +7,9 @@ import { UploadModal } from './components/captures/UploadModal';
 
 import { DashboardPage } from './pages/DashboardPage';
 import { PacketExplorerPage } from './pages/PacketExplorerPage';
-import { ProtocolsPage } from './pages/ProtocolsPage';
-import { ConversationsPage } from './pages/ConversationsPage';
-import { EndpointsPage } from './pages/EndpointsPage';
-import { PortsPage } from './pages/PortsPage';
+import { TrafficAnalysisPage } from './pages/TrafficAnalysisPage';
 import { SecurityInsightsPage } from './pages/SecurityInsightsPage';
-import { TimelinePage } from './pages/TimelinePage';
 import { ReportsPage } from './pages/ReportsPage';
-import { CapturesPage } from './pages/CapturesPage';
-import { EducationalPage } from './pages/EducationalPage';
 
 export function App() {
   const [captures, setCaptures] = useState<Capture[]>([]);
@@ -121,44 +115,27 @@ export function App() {
             <PacketExplorerPage capture={currentCapture} />
           )}
 
-          {currentTab === 'protocols' && (
-            <ProtocolsPage capture={currentCapture} />
-          )}
-
-          {currentTab === 'conversations' && (
-            <ConversationsPage capture={currentCapture} />
-          )}
-
-          {currentTab === 'endpoints' && (
-            <EndpointsPage capture={currentCapture} />
-          )}
-
-          {currentTab === 'ports' && (
-            <PortsPage capture={currentCapture} />
+          {(currentTab === 'traffic' || currentTab === 'protocols' || currentTab === 'conversations' || currentTab === 'endpoints' || currentTab === 'ports') && (
+            <TrafficAnalysisPage
+              capture={currentCapture}
+              initialSubTab={
+                currentTab === 'conversations'
+                  ? 'conversations'
+                  : currentTab === 'endpoints'
+                  ? 'endpoints'
+                  : currentTab === 'ports'
+                  ? 'ports'
+                  : 'protocols'
+              }
+            />
           )}
 
           {currentTab === 'security' && (
             <SecurityInsightsPage capture={currentCapture} />
           )}
 
-          {currentTab === 'timeline' && (
-            <TimelinePage capture={currentCapture} />
-          )}
-
-          {currentTab === 'reports' && (
+          {(currentTab === 'reports' || currentTab === 'educational') && (
             <ReportsPage capture={currentCapture} />
-          )}
-
-          {currentTab === 'captures' && (
-            <CapturesPage
-              currentCapture={currentCapture}
-              onSelectCapture={(c) => setCurrentCapture(c)}
-              onCapturesUpdated={() => loadCapturesList()}
-            />
-          )}
-
-          {currentTab === 'educational' && (
-            <EducationalPage />
           )}
         </main>
 

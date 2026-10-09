@@ -7,7 +7,7 @@ import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGri
 import { api } from '../services/api';
 import type { Capture, CaptureStatistics, ProtocolStat, SecurityOverview, Endpoint } from '../types';
 import { Badge } from '../components/common/Badge';
-import { EduCard } from '../components/common/EduCard';
+import { TimelinePage } from './TimelinePage';
 
 interface DashboardPageProps {
   capture: Capture | null;
@@ -15,6 +15,7 @@ interface DashboardPageProps {
 }
 
 export const DashboardPage: React.FC<DashboardPageProps> = ({ capture, onNavigateTab }) => {
+  const [viewMode, setViewMode] = useState<'overview' | 'timeline'>('overview');
   const [stats, setStats] = useState<CaptureStatistics | null>(null);
   const [protocols, setProtocols] = useState<ProtocolStat[]>([]);
   const [security, setSecurity] = useState<SecurityOverview | null>(null);
@@ -74,22 +75,43 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ capture, onNavigat
         </div>
 
         <div className="flex items-center gap-2">
+          <div className="flex items-center bg-slate-900 border border-slate-800 p-1 rounded-xl text-xs">
+            <button
+              onClick={() => setViewMode('overview')}
+              className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
+                viewMode === 'overview'
+                  ? 'bg-cyan-600 text-slate-950 font-semibold shadow-xs'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              📊 Overview
+            </button>
+            <button
+              onClick={() => setViewMode('timeline')}
+              className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
+                viewMode === 'timeline'
+                  ? 'bg-cyan-600 text-slate-950 font-semibold shadow-xs'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              📈 Timeline
+            </button>
+          </div>
+
           <button
             onClick={() => onNavigateTab('packets')}
             className="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer"
           >
             <Layers size={13} className="text-cyan-400" />
-            <span>Open Packet Table</span>
-          </button>
-          <button
-            onClick={() => onNavigateTab('security')}
-            className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-950/50 hover:bg-amber-900/50 border border-amber-800/60 text-amber-300 transition-colors flex items-center gap-1.5 cursor-pointer"
-          >
-            <ShieldAlert size={13} className="text-amber-400" />
-            <span>Security Insights ({security?.total_findings || 0})</span>
+            <span>Packets</span>
           </button>
         </div>
       </div>
+
+      {viewMode === 'timeline' ? (
+        <TimelinePage capture={capture} />
+      ) : (
+        <>
 
       {/* Top Metric Cards */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
@@ -256,78 +278,54 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ capture, onNavigat
 
       </div>
 
-      {/* Top Endpoints Mini Table & Educational Concept */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        {/* Top Active Endpoints */}
-        <div className="lg:col-span-2 p-5 rounded-xl bg-slate-900/60 border border-slate-800 space-y-3">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-sm font-semibold text-slate-200">Most Active Network Endpoints</h3>
-              <p className="text-[11px] text-slate-500">Top communication nodes ranked by total packets transferred</p>
-            </div>
-            <button
-              onClick={() => onNavigateTab('endpoints')}
-              className="text-xs text-cyan-400 hover:text-cyan-300 flex items-center gap-1 font-medium cursor-pointer"
-            >
-              All Endpoints <ArrowUpRight size={13} />
-            </button>
+      {/* Top Active Endpoints Table */}
+      <div className="p-5 rounded-xl bg-slate-900/60 border border-slate-800 space-y-3">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-sm font-semibold text-slate-200">Most Active Network Endpoints</h3>
+            <p className="text-[11px] text-slate-500">Top communication nodes ranked by total packets transferred</p>
           </div>
+          <button
+            onClick={() => onNavigateTab('traffic')}
+            className="text-xs text-cyan-400 hover:text-cyan-300 flex items-center gap-1 font-medium cursor-pointer"
+          >
+            All Endpoints & Flows <ArrowUpRight size={13} />
+          </button>
+        </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left font-mono text-xs">
-              <thead>
-                <tr className="border-b border-slate-800 text-slate-400 text-[11px]">
-                  <th className="py-2 px-3">Endpoint Address</th>
-                  <th className="py-2 px-3">Scope</th>
-                  <th className="py-2 px-3 text-right">Packets Tx</th>
-                  <th className="py-2 px-3 text-right">Packets Rx</th>
-                  <th className="py-2 px-3 text-right">Total Bytes</th>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left font-mono text-xs">
+            <thead>
+              <tr className="border-b border-slate-800 text-slate-400 text-[11px]">
+                <th className="py-2.5 px-3">Endpoint Address</th>
+                <th className="py-2.5 px-3">Scope</th>
+                <th className="py-2.5 px-3 text-right">Packets Tx</th>
+                <th className="py-2.5 px-3 text-right">Packets Rx</th>
+                <th className="py-2.5 px-3 text-right">Total Volume</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-800/60 text-slate-300">
+              {endpoints.slice(0, 6).map((ep) => (
+                <tr key={ep.id} className="hover:bg-slate-800/40 transition-colors">
+                  <td className="py-2.5 px-3 font-semibold text-cyan-400">{ep.address}</td>
+                  <td className="py-2.5 px-3">
+                    <Badge variant={ep.is_private ? 'info' : 'low'}>
+                      {ep.is_private ? 'Private / RFC1918' : 'Public Internet'}
+                    </Badge>
+                  </td>
+                  <td className="py-2.5 px-3 text-right">{ep.packets_sent.toLocaleString()}</td>
+                  <td className="py-2.5 px-3 text-right">{ep.packets_received.toLocaleString()}</td>
+                  <td className="py-2.5 px-3 text-right font-medium text-slate-200">
+                    {(ep.total_bytes / 1024).toFixed(1)} KB
+                  </td>
                 </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-800/60 text-slate-300">
-                {endpoints.slice(0, 5).map((ep) => (
-                  <tr key={ep.id} className="hover:bg-slate-800/40 transition-colors">
-                    <td className="py-2.5 px-3 font-semibold text-cyan-400">{ep.address}</td>
-                    <td className="py-2.5 px-3">
-                      <Badge variant={ep.is_private ? 'info' : 'low'}>
-                        {ep.is_private ? 'Private / RFC1918' : 'Public Internet'}
-                      </Badge>
-                    </td>
-                    <td className="py-2.5 px-3 text-right">{ep.packets_sent.toLocaleString()}</td>
-                    <td className="py-2.5 px-3 text-right">{ep.packets_received.toLocaleString()}</td>
-                    <td className="py-2.5 px-3 text-right font-medium text-slate-200">
-                      {(ep.total_bytes / 1024).toFixed(1)} KB
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </tbody>
+          </table>
         </div>
-
-        {/* Educational Callout Box */}
-        <div className="space-y-4">
-          <EduCard title="Defensive Packet Forensics Principles" category="Academic Primer" icon="book">
-            <p>
-              Packet analysis is the foundation of network security monitoring, incident response, and threat detection.
-            </p>
-            <ul className="list-disc list-inside space-y-1 text-slate-400 mt-2">
-              <li><strong className="text-slate-300">L2 Ethernet:</strong> Identifies physical MAC hardware & ARP bindings.</li>
-              <li><strong className="text-slate-300">L3 IP:</strong> Traces route traversal (TTL decrement) & fragmentation.</li>
-              <li><strong className="text-slate-300">L4 TCP/UDP:</strong> Evaluates handshakes, stateful flows, and port behavior.</li>
-              <li><strong className="text-slate-300">L7 Application:</strong> Inspects protocol headers (DNS lookups, HTTP methods).</li>
-            </ul>
-          </EduCard>
-
-          <EduCard title="Heuristic Anomaly Interpretation" category="Security Note" icon="shield">
-            <p>
-              In defensive security, an anomaly indicates behavior that deviates from standard operational baselines (such as rapid port connections or high RST ratios). These represent <em>heuristic indicators</em> prompting analyst investigation rather than definitive proof of breach.
-            </p>
-          </EduCard>
-        </div>
-
       </div>
+      </>
+      )}
 
     </div>
   );

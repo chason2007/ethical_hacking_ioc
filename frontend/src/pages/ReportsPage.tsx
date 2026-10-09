@@ -6,11 +6,14 @@ import { api } from '../services/api';
 import type { Capture, CaptureStatistics, SecurityOverview } from '../types';
 import { Badge } from '../components/common/Badge';
 
+import { EducationalPage } from './EducationalPage';
+
 interface ReportsPageProps {
   capture: Capture | null;
 }
 
 export const ReportsPage: React.FC<ReportsPageProps> = ({ capture }) => {
+  const [activeTab, setActiveTab] = useState<'reports' | 'viva'>('reports');
   const [stats, setStats] = useState<CaptureStatistics | null>(null);
   const [security, setSecurity] = useState<SecurityOverview | null>(null);
   const [generatingPdf, setGeneratingPdf] = useState(false);
@@ -64,18 +67,46 @@ export const ReportsPage: React.FC<ReportsPageProps> = ({ capture }) => {
   return (
     <div className="p-6 space-y-6 max-w-7xl mx-auto">
       
-      {/* Header */}
+      {/* Header & Sub-Tab Switcher */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-800">
         <div>
           <h1 className="text-xl font-bold text-slate-100 flex items-center gap-2">
             <FileText size={20} className="text-cyan-400" />
-            Security Audit Report & Data Export
+            Reports & Viva Study Guide
           </h1>
           <p className="text-xs text-slate-400 mt-0.5">
-            Produce formal academic / SOC forensic audit deliverables in PDF, CSV, and JSON formats.
+            Export executive audit deliverables or review academic networking and ethical hacking concepts.
           </p>
         </div>
+
+        <div className="flex items-center gap-1 bg-slate-900 border border-slate-800 p-1 rounded-xl text-xs">
+          <button
+            onClick={() => setActiveTab('reports')}
+            className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
+              activeTab === 'reports'
+                ? 'bg-cyan-600 text-slate-950 font-semibold shadow-xs'
+                : 'text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            📄 PDF & Data Exports
+          </button>
+          <button
+            onClick={() => setActiveTab('viva')}
+            className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
+              activeTab === 'viva'
+                ? 'bg-cyan-600 text-slate-950 font-semibold shadow-xs'
+                : 'text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            🎓 Viva Prep Guide
+          </button>
+        </div>
       </div>
+
+      {activeTab === 'viva' ? (
+        <EducationalPage />
+      ) : (
+        <>
 
       {/* Export Action Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -203,6 +234,8 @@ export const ReportsPage: React.FC<ReportsPageProps> = ({ capture }) => {
           </ul>
         </div>
       </div>
+      </>
+      )}
 
     </div>
   );
